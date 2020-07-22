@@ -1,5 +1,7 @@
 {
   "name": "vue-electron-sample",
+  "description": "vue-electron-sample",
+  "author": "tai@rights-s.jp",
   "version": "0.1.0",
   "private": true,
   "scripts": {

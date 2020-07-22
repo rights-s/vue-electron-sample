@@ -1,12 +1,24 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import usb from 'usb'
 import sql from 'mssql'
 
+const usbDevices = usb.getDeviceList()
 console.log('DEBUG: usb.getDeviceList()', usb.getDeviceList())
+
+usbDevices.forEach(device => {
+  device.open()
+  console.log('DEBUG: device.deviceDescriptor', device.deviceDescriptor)
+  device.getStringDescriptor(device.deviceDescriptor.iProduct, cb)
+})
+
+function cb (err, name) {
+  console.log('DEBUG: cb -> err', err)
+  console.log('DEBUG: cb -> name', name)
+}
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -21,15 +33,31 @@ protocol.registerSchemesAsPrivileged([
 
 async function getDataMSSQL () {
   try {
-    // make sure that any items are correctly URL encoded in the connection string
-    await sql.connect('mssql://sa:reallyStrongPwd123@127.0.0.1:1433/testdb')
+    const {
+      MSSQL_DATABASE,
+      MSSQL_SERVER,
+      MSSQL_PASSWORD,
+      MSSQL_USER
+    } = process.env
+
+    const config = {
+      user: MSSQL_USER,
+      password: MSSQL_PASSWORD,
+      server: MSSQL_SERVER,
+      database: MSSQL_DATABASE
+    }
+    await sql.connect(config)
+
     const result = await sql.query`select * from test`
-    console.log('DEBUG: result', result)
+    sql.close()
+
+    return result
   } catch (err) {
-    console.log('DEBUG: err', err)
-    // ... error checks
+    console.log('DEBUG: getDataMSSQL -> err', err)
   }
 }
+
+ipcMain.handle('getDataMSSQL', getDataMSSQL)
 
 function createWindow () {
   // Create the browser window.
@@ -88,7 +116,7 @@ app.on('ready', async () => {
     }
   }
   createWindow()
-  getDataMSSQL()
+  // getDataMSSQL()
 })
 
 // Exit cleanly on request from parent process in development mode.

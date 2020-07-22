@@ -1,7 +1,11 @@
 module.exports = {
   pluginOptions: {
     electronBuilder: {
-      externals: ['usb', 'mssql']
+      externals: ['usb', 'mssql'],
+      builderOptions: {
+        npmRebuild: true
+        // buildDependenciesFromSource: true
+      }
     }
   }
 }

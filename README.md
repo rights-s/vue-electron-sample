@@ -2,27 +2,28 @@
 
 ## Project setup
 ```
-npm install
+npm install yarn
+npx yarn
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npx yarn electron:serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+npx yarn electron:build
 ```
 
 ### Run your unit tests
 ```
-npm run test:unit
+npx yarn test:unit
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+npx yarn lint
 ```
 
 ### Customize configuration

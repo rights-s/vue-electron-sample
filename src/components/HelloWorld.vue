@@ -6,25 +6,20 @@
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
-    <h3>Installed CLI Plugins</h3>
+    <h3>MS SQL Server Data</h3>
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+      </tr>
+      <tr v-for="(row, index) in rows" :key="index">
+        <td>{{ row.id }}</td>
+        <td>{{ row.name }}</td>
+      </tr>
+    </table>
+    <h3>USB Device List</h3>
     <button id="but"> Show Device List</button>
     <p id="display"></p>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-mocha" target="_blank" rel="noopener">unit-mocha</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
     <ul>
       <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
       <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
@@ -36,12 +31,26 @@
 </template>
 
 <script>
+const ipc = window.require('electron').ipcRenderer
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
   },
+  data () {
+    return {
+      rows: []
+    }
+  },
   created () {
+    this.getSQLData()
+  },
+  methods: {
+    async getSQLData () {
+      const result = await ipc.invoke('getDataMSSQL')
+      this.rows = result.recordset
+    }
   }
 }
 </script>
@@ -61,5 +70,20 @@ li {
 }
 a {
   color: #42b983;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }
 </style>
