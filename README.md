@@ -13,7 +13,13 @@ npx yarn electron:serve
 
 ### Compiles and minifies for production
 ```
-npx yarn electron:build
+Build installer for macOS:
+npx yarn electron:build --darwin
+
+Build a NSIS installer for Windows on Windows:
+https://github.com/nodejs/node-gyp#on-windows
+
+npx yarn electron:build --win nsis
 ```
 
 ### Run your unit tests
