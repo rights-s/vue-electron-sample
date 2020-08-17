@@ -16,8 +16,11 @@
   },
   "main": "background.js",
   "dependencies": {
+    "axios": "^0.19.2",
     "chai-as-promised": "^7.1.1",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "mssql": "4",
     "usb": "^1.6.3",
     "vue": "^2.6.11",
